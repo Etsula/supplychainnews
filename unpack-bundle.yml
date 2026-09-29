@@ -1,0 +1,25 @@
+name: unpack-bundle
+
+on:
+  push:
+    paths: ["bundle.zip"]
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unzip bundle into repo root
+        run: |
+          unzip -o bundle.zip -d .
+          rm bundle.zip
+      - name: Commit unpacked files
+        run: |
+          git config user.name "unpack-bot"
+          git config user.email "unpack-bot@users.noreply.github.com"
+          git add -A
+          git commit -m "Unpack bundle.zip"
+          git push
